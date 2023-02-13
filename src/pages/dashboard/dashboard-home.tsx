@@ -40,11 +40,11 @@ function DashboardHome() {
       let data = {
          id: calEvent.id,
          title: calEvent.title,
-         start: format(Date.parse(calEvent.start), "dd MMM yyy HH:mm:ss"),
-         end: format(Date.parse(calEvent.end), "dd MMM yyy HH:mm:ss"),
+         start: format(Date.parse(calEvent.start), "dd MMM yyy HH:mm"),
+         end: format(Date.parse(calEvent.end), "dd MMM yyy HH:mm"),
          createdBy: calEvent.created_by,
       };
-      alert(JSON.stringify(calEvent));
+      alert([data.title + " ตั้งแต่ " + data.start + " ถึง " + data.end]);
    };
 
    let myEvents = roomBooking?.events.map((item: Event) => {
