@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 import "../fonts/SukhumvitSet-Bold.ttf";
-
+import "../fonts/SukhumvitSet-Medium.ttf"
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../redux-toolkit/hooks";
 

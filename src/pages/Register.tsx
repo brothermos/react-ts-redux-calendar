@@ -73,7 +73,7 @@ export default function Register() {
          let err: ErrorRegisterResponse = error;
          toast({
             title: "ผลการทำงาน",
-            description: err.message,
+            description: err.errors.email,
             status: "error",
             duration: 4000,
             isClosable: true,
