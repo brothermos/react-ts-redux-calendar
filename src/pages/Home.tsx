@@ -65,10 +65,10 @@ export default function Home() {
                   rounded={"full"}
                   px={6}
                   onClick={() => {
-                     navigate("/about");
+                     navigate("/register");
                   }}
                >
-                  เกี่ยวกับเรา
+                  สมัครสมาชิก
                </Button>
             </Stack>
             <Flex w={"full"}>

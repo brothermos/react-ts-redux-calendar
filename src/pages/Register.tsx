@@ -4,29 +4,34 @@ import {
    FormControl,
    FormLabel,
    Input,
-   Checkbox,
+   InputGroup,
+   HStack,
+   InputRightElement,
    Stack,
-   Link,
    Button,
    Heading,
    Text,
-   useColorModeValue,
    FormErrorMessage,
+   useColorModeValue,
+   Link,
    useToast,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { LoginFormInput } from "../app-types/login-form-input.type";
+import { useState } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { RegisterFormInput } from "../app-types/register-form-input.type";
 import { useAppDispatch } from "../redux-toolkit/hooks";
-import { loginThunk } from "../redux-toolkit/auth/auth-slice";
-import { LoginErrorResponse } from "../app-types/login.type";
+import { registerThunk } from "../redux-toolkit/auth/auth-slice";
+import { ErrorRegisterResponse } from "../app-types/register.type";
+import { LoginFormInput } from "../app-types/login-form-input.type";
 import { useNavigate } from "react-router-dom";
-
-export default function Login() {
-   const toast = useToast();
-   const dispatch = useAppDispatch();
+export default function Register() {
    const navigate = useNavigate();
+   const toast = useToast();
+   const [showPassword, setShowPassword] = useState(false);
+   const dispatch = useAppDispatch();
 
    // schema validation
    const schema = yup.object().shape({
@@ -44,30 +49,28 @@ export default function Login() {
       register,
       handleSubmit,
       formState: { errors, isSubmitting },
-   } = useForm<LoginFormInput>({
+   } = useForm<RegisterFormInput>({
       resolver: yupResolver(schema),
       mode: "all",
    });
 
-   const onSubmit = async (data: LoginFormInput) => {
+   const onSubmit = async (data: RegisterFormInput) => {
       try {
-         const result = await dispatch(loginThunk(data)).unwrap();
-         // เช็คว่าถ้ามี token ให้ navigate ไป dashboard
-         if (result.access_token) {
-            navigate("/dashboard");
+         const result = await dispatch(registerThunk(data)).unwrap();
+         if (result.data) {
+            navigate("/login");
          }
          // alert
          toast({
             title: "ผลการทำงาน",
-            description: "เข้าสู่ระบบเรียบร้อย",
+            description: "สมัครสมาชิกเรียบร้อย",
             status: "success",
             duration: 4000,
             isClosable: true,
             position: "top-right",
          });
-         console.log(result.access_token);
       } catch (error: any) {
-         let err: LoginErrorResponse = error;
+         let err: ErrorRegisterResponse = error;
          toast({
             title: "ผลการทำงาน",
             description: err.message,
@@ -78,8 +81,9 @@ export default function Login() {
          });
       }
    };
+
    return (
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form onSubmit={handleSubmit(onSubmit)}>
          <Flex
             minH={"100vh"}
             align={"center"}
@@ -88,10 +92,11 @@ export default function Login() {
          >
             <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
                <Stack align={"center"}>
-                  <Heading fontSize={"4xl"}>Login</Heading>
+                  <Heading fontSize={"4xl"} textAlign={"center"}>
+                     Sign up
+                  </Heading>
                   {/* <Text fontSize={"lg"} color={"gray.600"}>
-                     to enjoy all of our cool{" "}
-                     <Link color={"blue.400"}>features</Link> ✌️
+                     to enjoy all of our cool features ✌️
                   </Text> */}
                </Stack>
                <Box
@@ -100,9 +105,14 @@ export default function Login() {
                   boxShadow={"lg"}
                   p={10}
                >
-                  <Stack spacing={5}>
+                  <Stack spacing={4}>
+                     <FormControl id="email" isRequired>
+                        <FormLabel>Your Name</FormLabel>
+                        <Input {...register("name")} />
+                     </FormControl>
                      <FormControl
                         id="email"
+                        isRequired
                         isInvalid={errors.email ? true : false}
                      >
                         <FormLabel>Email address</FormLabel>
@@ -113,44 +123,59 @@ export default function Login() {
                      </FormControl>
                      <FormControl
                         id="password"
+                        isRequired
                         isInvalid={errors.password ? true : false}
                      >
                         <FormLabel>Password</FormLabel>
-                        <Input type="password" {...register("password")} />
+                        <InputGroup>
+                           <Input
+                              type={showPassword ? "text" : "password"}
+                              {...register("password")}
+                           />
+
+                           <InputRightElement h={"full"}>
+                              <Button
+                                 variant={"ghost"}
+                                 onClick={() =>
+                                    setShowPassword(
+                                       (showPassword) => !showPassword
+                                    )
+                                 }
+                              >
+                                 {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                              </Button>
+                           </InputRightElement>
+                        </InputGroup>
                         <FormErrorMessage>
                            {errors.password && errors.password?.message}
                         </FormErrorMessage>
                      </FormControl>
-                     <Stack spacing={10}>
-                        <Stack
-                           direction={{ base: "column", sm: "row" }}
-                           align={"start"}
-                           justify={"space-between"}
-                        >
-                           <Text align={"center"}>
-                              Not a member?{" "}
-                              <Link
-                                 color={"blue.400"}
-                                 onClick={() => {
-                                    navigate("/register");
-                                 }}
-                              >
-                                 Register Now
-                              </Link>
-                           </Text>
-                        </Stack>
+                     <Stack spacing={10} pt={2}>
                         <Button
-                           isLoading={isSubmitting}
-                           loadingText="กำลังเข้าสู่ระบบ"
                            type="submit"
+                           loadingText="Submitting"
+                           size="lg"
                            bg={"blue.400"}
                            color={"white"}
                            _hover={{
                               bg: "blue.500",
                            }}
                         >
-                           Login
+                           Sign up
                         </Button>
+                     </Stack>
+                     <Stack pt={6}>
+                        <Text align={"center"}>
+                           Already a user?{" "}
+                           <Link
+                              color={"blue.400"}
+                              onClick={() => {
+                                 navigate("/login");
+                              }}
+                           >
+                              Login
+                           </Link>
+                        </Text>
                      </Stack>
                   </Stack>
                </Box>

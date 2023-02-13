@@ -1,6 +1,22 @@
 import { LoginResponse } from "../app-types/login.type";
 import { ProfileResponse } from "../app-types/profile.type";
+import { RegisterResponse } from "../app-types/register.type";
 import { AxiosResponse, http } from "./http.service";
+
+export async function register(
+   name: string,
+   email: string,
+   password: string
+): Promise<AxiosResponse<RegisterResponse>> {
+   return await http.post<RegisterResponse>(
+      "https://api.codingthailand.com/api/register",
+      {
+         name: name,
+         email: email,
+         password: password,
+      }
+   );
+}
 
 export async function login(
    email: string,
