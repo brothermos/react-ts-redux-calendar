@@ -1,0 +1,14 @@
+@font-face {
+   font-family: "Medium"; /*Can be any text*/
+   src: local("SukhumvitSet-Medium"),
+      url("./fonts/SukhumvitSet-Medium.ttf") format("truetype");
+}
+
+* {
+   font-family: "Medium";
+}
+
+.menuActive {
+   background-color: rgb(32, 63, 175);
+   color: white;
+}
