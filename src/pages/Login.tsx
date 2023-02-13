@@ -105,7 +105,7 @@ export default function Login() {
                         id="email"
                         isInvalid={errors.email ? true : false}
                      >
-                        <FormLabel>Email address</FormLabel>
+                        <FormLabel>Email</FormLabel>
                         <Input type="email" {...register("email")} />
                         <FormErrorMessage>
                            {errors.email && errors.email?.message}

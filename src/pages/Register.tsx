@@ -152,8 +152,9 @@ export default function Register() {
                      </FormControl>
                      <Stack spacing={10} pt={2}>
                         <Button
+                           isLoading={isSubmitting}
+                           loadingText="กำลังสมัครสมาชิก"
                            type="submit"
-                           loadingText="Submitting"
                            size="lg"
                            bg={"blue.400"}
                            color={"white"}
